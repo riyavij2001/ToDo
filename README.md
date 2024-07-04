@@ -26,10 +26,3 @@ Make sure you have the following installed on your machine:
 - Node.js
 - npm or yarn
 
-### Installation
-
-1. Clone the repository:
-
-   ```sh
-   git clone https://github.com/yourusername/todo-list-redux.git
-   cd todo-list-redux
