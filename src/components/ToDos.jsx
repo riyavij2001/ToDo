@@ -51,11 +51,12 @@ function ToDos() {
                       edge="end"
                       aria-label="edit"
                       onClick={() => {
-                        handleOpen();
-                        setEditTodoObject({
-                          id: todo.id,
-                          text: todo.text,
-                        });
+                          handleOpen();
+                          setEditTodoObject({
+                              id: todo.id,
+                              text: todo.text,
+                            });
+                            console.log(todo.text)
                       }}
                     >
                       <EditIcon />
@@ -125,7 +126,7 @@ function ToDos() {
                 label="Enter Todo.."
                 variant="outlined"
                 value={editTodoObject.text}
-                onChange={(e) => setEditTodoObject({ text: e.target.value })}
+                onChange={(e) => setEditTodoObject({ id: editTodoObject.id, text: e.target.value })}
                 sx={{ marginRight: "40px", marginBottom: "30px" }}
               />
               <Button

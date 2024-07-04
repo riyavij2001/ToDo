@@ -1,7 +1,7 @@
 import { createSlice, nanoid } from "@reduxjs/toolkit";
 
 const initialState = {
-    todos: [{id: 1, text: "Hello World!"}]
+    todos: [{id: "1", text: "Hello World!"}]
 }
 
 export const todoSlice = createSlice({
@@ -19,7 +19,8 @@ export const todoSlice = createSlice({
             state.todos = state.todos.filter((todo) => todo.id != action.payload)
         },
         editTodo: (state, action) => {
-            const todoIndex = state.todos.findIndex((todo) => todo.id != action.payload.id)
+            console.log("Edit data: ",action.payload)
+            const todoIndex = state.todos.findIndex((todo) => todo.id === action.payload.id)
             state.todos[todoIndex].text = action.payload.text
         },
 
