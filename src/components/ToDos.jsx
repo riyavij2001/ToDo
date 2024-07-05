@@ -15,6 +15,7 @@ import { removeTodo, editTodo } from "../features/todo/todoSlice";
 import CloseIcon from "@mui/icons-material/Close";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
+import axios from "axios";
 
 function ToDos() {
   const todos = useSelector((state) => state.todos);
@@ -25,6 +26,28 @@ function ToDos() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const handleRemoveToDo = (id) => {
+    dispatch(removeTodo(id));
+
+    axios.delete(`http://localhost:8000/deleteToDO/${id}`).then((response) => {
+      console.log(response.status, response.data.message);
+    }).catch((error) => {
+      console.error("There was an error deleting the todo!", error);
+    });
+  }
+  const handleEditToDo = (id, text) => {
+    dispatch(editTodo({id,text}));
+
+    axios.post(`http://localhost:8000/editToDO`, {
+      id: id,
+      todoDB: text
+    }).then((response) => {
+      console.log(response.status, response.data.message);
+    }).catch((error) => {
+      console.error("There was an error deleting the todo!", error);
+    });
+  }
 
   return (
     <>
@@ -51,12 +74,12 @@ function ToDos() {
                       edge="end"
                       aria-label="edit"
                       onClick={() => {
-                          handleOpen();
-                          setEditTodoObject({
-                              id: todo.id,
-                              text: todo.text,
-                            });
-                            console.log(todo.text)
+                        handleOpen();
+                        setEditTodoObject({
+                          id: todo.id,
+                          text: todo.text,
+                        });
+                        console.log(todo.text);
                       }}
                     >
                       <EditIcon />
@@ -64,7 +87,7 @@ function ToDos() {
                     <IconButton
                       edge="end"
                       aria-label="delete"
-                      onClick={() => dispatch(removeTodo(todo.id))}
+                      onClick={() => handleRemoveToDo(todo.id)}
                     >
                       <DeleteIcon />
                     </IconButton>
@@ -126,7 +149,12 @@ function ToDos() {
                 label="Enter Todo.."
                 variant="outlined"
                 value={editTodoObject.text}
-                onChange={(e) => setEditTodoObject({ id: editTodoObject.id, text: e.target.value })}
+                onChange={(e) =>
+                  setEditTodoObject({
+                    id: editTodoObject.id,
+                    text: e.target.value,
+                  })
+                }
                 sx={{ marginRight: "40px", marginBottom: "30px" }}
               />
               <Button
@@ -135,7 +163,7 @@ function ToDos() {
                 color="primary"
                 sx={{ padding: "10px 20px", width: "320px" }}
                 onClick={() => {
-                  dispatch(editTodo(editTodoObject));
+                  handleEditToDo(editTodoObject.id, editTodoObject.text)
                   handleClose();
                 }}
               >

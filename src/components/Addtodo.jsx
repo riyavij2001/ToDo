@@ -8,14 +8,29 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import { addTodo } from "../features/todo/todoSlice";
 import { useDispatch } from "react-redux";
+import axios from "axios";
+import { selectId } from "../features/todo/todoSlice";
+import { v4 as uuid } from "uuid";
 
 function Addtodo() {
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const dispatch = useDispatch();
+  const unique_id = uuid();
+  const small_id = unique_id.slice(0, 8);
 
   const addTodoHandler = (e) => {
     e.preventDefault();
-    dispatch(addTodo(input));
+    const newId = unique_id.toString(16);
+    const userData = {
+      id: newId,
+      todoDB: input,
+    };
+    dispatch(addTodo({ id: newId, text: input }));
+    axios
+      .post("http://localhost:8000/createToDO", userData)
+      .then((response) => {
+        console.log(response.status, response.data.token);
+      });
     setInput('');
   };
 
@@ -42,7 +57,7 @@ function Addtodo() {
             padding: "20px",
             backgroundColor: "#f5f5f5",
             borderRadius: "8px",
-            boxShadow: "0 4px 8px rgba(0,0,0,0.1)"
+            boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
           }}
         >
           <TextField
@@ -53,7 +68,12 @@ function Addtodo() {
             onChange={(e) => setInput(e.target.value)}
             sx={{ marginRight: "10px" }}
           />
-          <Button type="submit" variant="contained" color="primary" sx={{ padding: "10px 20px" }}>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            sx={{ padding: "10px 20px" }}
+          >
             Add Todo
           </Button>
         </Box>
